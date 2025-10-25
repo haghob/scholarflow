@@ -243,3 +243,178 @@ npm run build
 - **Backend**: Railway, Render, DigitalOcean App Platform
 - **Database**: Railway PostgreSQL, Supabase, Neon
 - **Search**: Elastic Cloud (free tier available)
+
+
+
+
+
+
+-----------------------------------------------
+
+scholarflow/
+├── README.md
+├── .gitignore
+├── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── backend/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── .eslintrc.json
+│   ├── .prettierrc
+│   ├── .env
+│   ├── .env.example
+│   ├── jest.config.js
+│   ├── Dockerfile
+│   ├── src/
+│   │   ├── server.ts
+│   │   ├── app.ts
+│   │   ├── config/
+│   │   │   ├── database.ts
+│   │   │   ├── redis.ts
+│   │   │   └── elasticsearch.ts
+│   │   ├── models/
+│   │   │   ├── User.ts
+│   │   │   ├── Article.ts
+│   │   │   ├── Source.ts
+│   │   │   ├── Collection.ts
+│   │   │   └── Tag.ts
+│   │   ├── controllers/
+│   │   │   ├── authController.ts
+│   │   │   ├── articleController.ts
+│   │   │   ├── userController.ts
+│   │   │   ├── searchController.ts
+│   │   │   └── collectionController.ts
+│   │   ├── routes/
+│   │   │   ├── index.ts
+│   │   │   ├── authRoutes.ts
+│   │   │   ├── articleRoutes.ts
+│   │   │   ├── userRoutes.ts
+│   │   │   ├── searchRoutes.ts
+│   │   │   └── collectionRoutes.ts
+│   │   ├── middleware/
+│   │   │   ├── auth.ts
+│   │   │   ├── errorHandler.ts
+│   │   │   ├── validation.ts
+│   │   │   └── rateLimiter.ts
+│   │   ├── services/
+│   │   │   ├── authService.ts
+│   │   │   ├── articleService.ts
+│   │   │   ├── scrapingService.ts
+│   │   │   ├── recommendationService.ts
+│   │   │   └── notificationService.ts
+│   │   ├── jobs/
+│   │   │   ├── articleScraper.ts
+│   │   │   ├── indexArticles.ts
+│   │   │   └── sendNotifications.ts
+│   │   ├── utils/
+│   │   │   ├── logger.ts
+│   │   │   ├── apiClients.ts
+│   │   │   ├── validators.ts
+│   │   │   └── helpers.ts
+│   │   └── types/
+│   │       ├── index.ts
+│   │       ├── article.types.ts
+│   │       ├── user.types.ts
+│   │       └── api.types.ts
+│   └── tests/
+│       ├── unit/
+│       ├── integration/
+│       └── setup.ts
+│
+├── frontend/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── .eslintrc.json
+│   ├── .prettierrc
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── vite.config.ts
+│   ├── index.html
+│   ├── Dockerfile
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   └── logo.svg
+│   ├── src/
+│   │   ├── main.tsx
+│   │   ├── App.tsx
+│   │   ├── vite-env.d.ts
+│   │   ├── assets/
+│   │   │   └── styles/
+│   │   │       └── index.css
+│   │   ├── components/
+│   │   │   ├── common/
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Input.tsx
+│   │   │   │   ├── Card.tsx
+│   │   │   │   ├── Modal.tsx
+│   │   │   │   ├── Loader.tsx
+│   │   │   │   └── Navbar.tsx
+│   │   │   ├── articles/
+│   │   │   │   ├── ArticleCard.tsx
+│   │   │   │   ├── ArticleList.tsx
+│   │   │   │   ├── ArticleDetail.tsx
+│   │   │   │   ├── ArticleFilters.tsx
+│   │   │   │   └── ArticleSearch.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   ├── StatsCard.tsx
+│   │   │   │   ├── RecentArticles.tsx
+│   │   │   │   └── TrendingTopics.tsx
+│   │   │   ├── collections/
+│   │   │   │   ├── CollectionCard.tsx
+│   │   │   │   └── CollectionList.tsx
+│   │   │   └── visualizations/
+│   │   │       ├── CitationGraph.tsx
+│   │   │       ├── TopicsCloud.tsx
+│   │   │       └── PublicationChart.tsx
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Articles.tsx
+│   │   │   ├── ArticleDetailPage.tsx
+│   │   │   ├── Collections.tsx
+│   │   │   ├── Search.tsx
+│   │   │   ├── Profile.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── features/
+│   │   │   ├── auth/
+│   │   │   │   ├── authSlice.ts
+│   │   │   │   └── authAPI.ts
+│   │   │   ├── articles/
+│   │   │   │   ├── articlesSlice.ts
+│   │   │   │   └── articlesAPI.ts
+│   │   │   └── collections/
+│   │   │       ├── collectionsSlice.ts
+│   │   │       └── collectionsAPI.ts
+│   │   ├── store/
+│   │   │   └── index.ts
+│   │   ├── hooks/
+│   │   │   ├── useAuth.ts
+│   │   │   ├── useArticles.ts
+│   │   │   └── useDebounce.ts
+│   │   ├── services/
+│   │   │   ├── api.ts
+│   │   │   └── axios.config.ts
+│   │   ├── utils/
+│   │   │   ├── formatters.ts
+│   │   │   ├── validators.ts
+│   │   │   └── constants.ts
+│   │   ├── types/
+│   │   │   ├── index.ts
+│   │   │   ├── article.types.ts
+│   │   │   └── user.types.ts
+│   │   └── routes/
+│   │       ├── index.tsx
+│   │       ├── ProtectedRoute.tsx
+│   │       └── PublicRoute.tsx
+│   └── tests/
+│       └── setup.ts
+│
+└── docs/
+    ├── API.md
+    ├── ARCHITECTURE.md
+    └── DEPLOYMENT.md
