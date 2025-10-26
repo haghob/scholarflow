@@ -7,9 +7,17 @@ import logger from '../utils/logger';
 
 // Generate JWT token
 const generateToken = (userId: string): string => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
+  const jwtSecret = process.env.JWT_SECRET as jwt.Secret;
+  if (!jwtSecret) {
+    logger.error('JWT_SECRET is not set');
+    throw new AppError('Internal server error', 500);
+  }
+
+  const token = jwt.sign({ id: userId }, jwtSecret, {
     expiresIn: process.env.JWT_EXPIRE || '7d',
-  });
+  } as jwt.SignOptions);
+
+  return token;
 };
 
 // @desc    Register user
@@ -21,8 +29,14 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password, firstName, lastName, institution, researchFields } =
-      req.body;
+    const { 
+      email, 
+      password, 
+      firstName = null, 
+      lastName = null, 
+      institution = null, 
+      researchFields = null 
+    } = req.body;
 
     // Validate input
     if (!email || !password) {
