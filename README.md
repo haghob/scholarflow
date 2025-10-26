@@ -13,14 +13,14 @@ ScholarFlow is a full-stack web application that aggregates scientific publicati
 
 ### Key Features
 
-- **Intelligent search**: Full-text search powered by Elasticsearch
-- **Advanced filtering**: Filter by date, citations, domain, journal impact factor
-- **Visualizations**: Citation networks, trending topics, publication trends
+- **Intelligent search**: full-text search powered by Elasticsearch
+- **Advanced filtering**: filter by date, citations, domain, journal impact factor
+- **Visualizations**: citation networks, trending topics, publication trends
 - **Smart recommendations**: ML-based article suggestions based on user interests
-- **Personal collections**: Organize articles in custom collections
-- **Real-time notifications**: Get alerted when new relevant articles are published
+- **Personal collections**: organize articles in custom collections
+- **Real-time notifications**: get alerted when new relevant articles are published
 - **Export options**: BibTeX, RIS, and annotated PDF exports
-- **Dark mode**: Easy on the eyes during late-night research sessions
+- **Dark mode**: easy on the eyes during late-night research sessions
 
 ## Architecture
 
@@ -194,7 +194,7 @@ See [docs/API.md](./docs/API.md) for complete API reference.
 
 1. **Create a feature branch**
 ```bash
-git checkout -b feature/your-feature-name
+git checkout -b feature/feature-name
 ```
 
 2. **Make your changes**
@@ -250,7 +250,7 @@ npm run build
 
 
 -----------------------------------------------
-
+```bash
 scholarflow/
 ├── README.md
 ├── .gitignore
@@ -418,3 +418,4 @@ scholarflow/
     ├── API.md
     ├── ARCHITECTURE.md
     └── DEPLOYMENT.md
+```
