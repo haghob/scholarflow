@@ -1,50 +1,84 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-interface User {
-  id: string;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-}
+const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api/v1';
 
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-}
-
-const initialState: AuthState = {
-  user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: false,
-  loading: false,
-};
-
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    setCredentials: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
-      localStorage.setItem('token', action.payload.token);
-    },
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.isAuthenticated = false;
-      localStorage.removeItem('token');
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
 });
 
-export const { setCredentials, logout, setLoading } = authSlice.actions;
-export default authSlice.reducer;
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authAPI = {
+  register: async (data: {
+    email: string;
+    password: string;
+    firstName?: string;
+    lastName?: string;
+    institution?: string;
+    researchFields?: string[];
+  }) => {
+    const response = await api.post('/auth/register', data);
+    return response.data;
+  },
+
+  login: async (data: { email: string; password: string }) => {
+    const response = await api.post('/auth/login', data);
+    return response.data;
+  },
+
+  getMe: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
+
+  logout: async () => {
+    const response = await api.post('/auth/logout');
+    return response.data;
+  },
+};
+
+export const articlesAPI = {
+  getAll: async (params?: any) => {
+    const response = await api.get('/articles', { params });
+    return response.data;
+  },
+
+  getById: async (id: string) => {
+    const response = await api.get(`/articles/${id}`);
+    return response.data;
+  },
+};
+
+export const searchAPI = {
+  search: async (query: string) => {
+    const response = await api.post('/search', { query });
+    return response.data;
+  },
+};
+
+export default api;
