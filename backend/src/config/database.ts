@@ -2,12 +2,15 @@ import { Pool, PoolConfig } from 'pg';
 import logger from '../utils/logger';
 
 const poolConfig: PoolConfig = {
-  connectionString: process.env.DATABASE_URL,
-  max: 20, 
+  host: process.env.PGHOST || 'localhost',
+  port: parseInt(process.env.PGPORT || '5432'),
+  user: process.env.PGUSER || 'scholarflow',
+  password: process.env.PGPASSWORD || 'scholarflow_dev_password',
+  database: process.env.PGDATABASE || 'scholarflow',
+  max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 };
-
 
 const pool = new Pool(poolConfig);
 
