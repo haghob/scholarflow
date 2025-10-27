@@ -63,7 +63,7 @@ export const authAPI = {
 };
 
 export const articlesAPI = {
-  getAll: async (params?: any) => {
+  getAll: async (params?: Record<string, unknown>) => {
     const response = await api.get('/articles', { params });
     return response.data;
   },
