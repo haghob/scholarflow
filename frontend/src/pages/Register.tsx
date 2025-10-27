@@ -39,7 +39,13 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { confirmPassword, ...registerData } = formData;
+      const registerData = {
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        institution: formData.institution,
+      };
       const response = await authAPI.register(registerData);
       dispatch(setCredentials({
         user: response.user,
