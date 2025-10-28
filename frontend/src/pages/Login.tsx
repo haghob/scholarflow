@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { authAPI } from '../services/api';
 import { setCredentials } from '../features/auth/authSlice';
-import { LogIn } from 'lucide-react';
+import { LogIn, AlertCircle } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,15 +20,19 @@ const Login = () => {
     setLoading(true);
 
     try {
+      console.log('🔄 Tentative de connexion...', { email });
       const response = await authAPI.login({ email, password });
+      console.log('✅ Connexion réussie !', response);
+      
       dispatch(setCredentials({
         user: response.user,
         token: response.token,
       }));
+      
       navigate('/dashboard');
-    } catch (err) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Login failed');
+    } catch (err: any) {
+      console.error('❌ Erreur de connexion:', err);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -36,16 +40,19 @@ const Login = () => {
 
   return (
     <div className="max-w-md mx-auto mt-16">
-      <div className="card">
+      <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="text-center mb-8">
-          <LogIn className="h-12 w-12 text-primary-600 mx-auto mb-4" />
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-4">
+            <LogIn className="h-8 w-8 text-blue-600" />
+          </div>
           <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -59,7 +66,7 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               placeholder="you@example.com"
               required
             />
@@ -74,7 +81,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
               required
             />
@@ -83,7 +90,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
@@ -92,7 +99,7 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
               Sign up
             </Link>
           </p>

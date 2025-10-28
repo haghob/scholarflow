@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { authAPI } from '../services/api';
 import { setCredentials } from '../features/auth/authSlice';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, AlertCircle } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -36,9 +36,15 @@ const Register = () => {
       return;
     }
 
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
 
     try {
+      console.log('🔄 Tentative d\'inscription...', { email: formData.email });
       const registerData = {
         email: formData.email,
         password: formData.password,
@@ -47,31 +53,37 @@ const Register = () => {
         institution: formData.institution,
       };
       const response = await authAPI.register(registerData);
+      console.log('✅ Inscription réussie !', response);
+      
       dispatch(setCredentials({
         user: response.user,
         token: response.token,
       }));
+      
       navigate('/dashboard');
-    } catch (err) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Registration failed');
+    } catch (err: any) {
+      console.error('❌ Erreur d\'inscription:', err);
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16">
-      <div className="card">
+    <div className="max-w-md mx-auto mt-16 mb-16">
+      <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="text-center mb-8">
-          <UserPlus className="h-12 w-12 text-primary-600 mx-auto mb-4" />
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 mb-4">
+            <UserPlus className="h-8 w-8 text-purple-600" />
+          </div>
           <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
           <p className="text-gray-600 mt-2">Join ScholarFlow today</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -87,7 +99,7 @@ const Register = () => {
                 type="text"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="input-field"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                 placeholder="John"
               />
             </div>
@@ -102,7 +114,7 @@ const Register = () => {
                 type="text"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="input-field"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                 placeholder="Doe"
               />
             </div>
@@ -118,7 +130,7 @@ const Register = () => {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="you@example.com"
               required
             />
@@ -134,7 +146,7 @@ const Register = () => {
               type="text"
               value={formData.institution}
               onChange={handleChange}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="University Name"
             />
           </div>
@@ -149,9 +161,10 @@ const Register = () => {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
               required
+              minLength={6}
             />
           </div>
 
@@ -165,7 +178,7 @@ const Register = () => {
               type="password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
               required
             />
@@ -174,7 +187,7 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
@@ -183,7 +196,7 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/login" className="text-purple-600 hover:text-purple-700 font-medium">
               Sign in
             </Link>
           </p>
