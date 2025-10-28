@@ -419,3 +419,23 @@ scholarflow/
     ├── ARCHITECTURE.md
     └── DEPLOYMENT.md
 ```
+
+
+VALEUR RÉELLE POUR LES CHERCHEURS
+Avant ScholarFlow :
+
+- Ouvrir ArXiv → Chercher
+- Ouvrir PubMed → Chercher encore
+- Ouvrir CrossRef → Chercher encore
+- Copier-coller dans un doc Word
+- 2-3 heures perdues par jour
+
+Avec ScholarFlow :
+
+- Une seule recherche → Tous les résultats
+- Sauvegarder dans des collections
+- Recommandations automatiques
+- Voir les tendances
+- 30 minutes par jour
+
+= Gain de 2h30 par jour !
