@@ -27,6 +27,12 @@ const Navbar = () => {
               ScholarFlow
             </span>
           </Link>
+          <Link to="/articles"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+          >
+            <BookOpen className="h-5 w-5" />
+            <span className="font-medium">Articles</span>
+          </Link>
 
           {/* Navigation */}
           <div className="flex items-center space-x-2">
