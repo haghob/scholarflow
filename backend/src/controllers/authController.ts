@@ -5,7 +5,6 @@ import { query } from '../config/database';
 import { AppError } from '../middleware/errorHandler';
 import logger from '../utils/logger';
 
-// Generate JWT token
 const generateToken = (userId: string): string => {
   const jwtSecret = process.env.JWT_SECRET as jwt.Secret;
   if (!jwtSecret) {
@@ -38,12 +37,10 @@ export const register = async (
       researchFields = null 
     } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return next(new AppError('Please provide email and password', 400));
     }
 
-    // Check if user already exists
     const existingUser = await query(
       'SELECT id FROM users WHERE email = $1',
       [email]
@@ -53,10 +50,8 @@ export const register = async (
       return next(new AppError('Email already registered', 400));
     }
 
-    // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create user
     const result = await query(
       `INSERT INTO users (email, password_hash, first_name, last_name, institution, research_fields)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -65,8 +60,6 @@ export const register = async (
     );
 
     const user = result.rows[0];
-
-    // Generate token
     const token = generateToken(user.id);
 
     logger.info('User registered:', { userId: user.id, email: user.email });
@@ -99,12 +92,9 @@ export const login = async (
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return next(new AppError('Please provide email and password', 400));
     }
-
-    // Get user
     const result = await query(
       `SELECT id, email, password_hash, first_name, last_name, institution, 
               research_fields, is_active
@@ -118,19 +108,15 @@ export const login = async (
 
     const user = result.rows[0];
 
-    // Check if user is active
     if (!user.is_active) {
       return next(new AppError('Account is deactivated', 401));
     }
-
-    // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
       return next(new AppError('Invalid credentials', 401));
     }
 
-    // Generate token
     const token = generateToken(user.id);
 
     logger.info('User logged in:', { userId: user.id, email: user.email });

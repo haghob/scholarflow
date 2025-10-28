@@ -8,7 +8,6 @@ import { protect } from '../middleware/auth';
 
 const router = Router();
 
-// Public routes
 router.get('/', getArticles);
 router.get('/sources', getSources);
 router.get('/:id', getArticleById);

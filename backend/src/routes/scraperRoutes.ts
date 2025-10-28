@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { scrapeArxiv, scrapeArxivBulk } from '../controllers/scraperController';
-// import { protect } from '../middleware/auth'; // Pour production
+// import { protect } from '../middleware/auth'; // For production
 
 const router = Router();
 
-// TODO: En production, protéger ces routes avec 'protect' middleware
+// TODO: In production, protect these routes with 'protect' middleware
 router.post('/arxiv', scrapeArxiv);
 router.post('/arxiv/bulk', scrapeArxivBulk);
 

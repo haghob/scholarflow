@@ -27,7 +27,6 @@ export const getArticles = async (
 
     const offset = (parseInt(page) - 1) * parseInt(limit);
 
-    // Build query
     let whereConditions: string[] = [];
     let queryParams: any[] = [];
     let paramIndex = 1;
@@ -73,14 +72,12 @@ export const getArticles = async (
         ? `WHERE ${whereConditions.join(' AND ')}`
         : '';
 
-    // Get total count
     const countResult = await query(
       `SELECT COUNT(*) FROM articles ${whereClause}`,
       queryParams
     );
     const total = parseInt(countResult.rows[0].count);
 
-    // Get articles
     queryParams.push(parseInt(limit), offset);
     const articlesResult = await query(
       `SELECT 

@@ -17,14 +17,14 @@ process.on('uncaughtException', (error: Error) => {
 async function startServer() {
   try {
     await connectDatabase();
-    logger.info('✅ PostgreSQL connected successfully');
+    logger.info('PostgreSQL connected successfully');
 
     await connectRedis();
-    logger.info('✅ Redis connected successfully');
+    logger.info('Redis connected successfully');
 
     const server = app.listen(PORT, () => {
-      logger.info(`🚀 Server running in ${NODE_ENV} mode on port ${PORT}`);
-      logger.info(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
+      logger.info(`Server running in ${NODE_ENV} mode on port ${PORT}`);
+      logger.info(`API Documentation: http://localhost:${PORT}/api/docs`);
     });
 
     process.on('unhandledRejection', (error: Error) => {
@@ -35,13 +35,13 @@ async function startServer() {
     });
 
     process.on('SIGTERM', () => {
-      logger.info('👋 SIGTERM received. Shutting down gracefully...');
+      logger.info('SIGTERM received. Shutting down gracefully...');
       server.close(() => {
-        logger.info('✅ Process terminated');
+        logger.info('Process terminated');
       });
     });
   } catch (error) {
-    logger.error('❌ Failed to start server:', error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
 }
