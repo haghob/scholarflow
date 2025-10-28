@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Calendar, BookOpen, ExternalLink, FileText } from 'lucide-react';
+import { Search, Filter, Calendar, BookOpen, ExternalLink, FileText, X } from 'lucide-react';
 import axios from 'axios';
 
 interface Article {
@@ -15,6 +15,32 @@ interface Article {
   is_open_access: boolean;
 }
 
+const AVAILABLE_FIELDS = [
+  'cs.LG', // Machine Learning
+  'cs.AI', // Artificial Intelligence
+  'cs.CV', // Computer Vision
+  'cs.CL', // Computation and Language (NLP)
+  'cs.NE', // Neural and Evolutionary Computing
+  'stat.ML', // Machine Learning (Statistics)
+  'cs.RO', // Robotics
+  'q-bio', // Quantitative Biology
+  'physics', // Physics
+  'math', // Mathematics
+];
+
+const FIELD_LABELS: Record<string, string> = {
+  'cs.LG': 'Machine Learning',
+  'cs.AI': 'Artificial Intelligence',
+  'cs.CV': 'Computer Vision',
+  'cs.CL': 'Natural Language Processing',
+  'cs.NE': 'Neural Computing',
+  'stat.ML': 'Statistical ML',
+  'cs.RO': 'Robotics',
+  'q-bio': 'Biology',
+  'physics': 'Physics',
+  'math': 'Mathematics',
+};
+
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,10 +48,11 @@ const Articles = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
   useEffect(() => {
     fetchArticles();
-  }, [page, searchQuery]);
+  }, [page, selectedFields]);
 
   const fetchArticles = async () => {
     try {
@@ -39,7 +66,18 @@ const Articles = () => {
       });
 
       if (response.data.success) {
-        setArticles(response.data.data.articles);
+        let filteredArticles = response.data.data.articles;
+        
+        // Filter by selected research fields
+        if (selectedFields.length > 0) {
+          filteredArticles = filteredArticles.filter((article: Article) =>
+            article.research_fields?.some(field =>
+              selectedFields.some(selected => field.toLowerCase().includes(selected.toLowerCase()))
+            )
+          );
+        }
+        
+        setArticles(filteredArticles);
         setTotal(response.data.data.total);
       }
     } catch (error) {
@@ -53,6 +91,21 @@ const Articles = () => {
     e.preventDefault();
     setPage(1);
     fetchArticles();
+  };
+
+  const toggleField = (field: string) => {
+    setSelectedFields(prev =>
+      prev.includes(field)
+        ? prev.filter(f => f !== field)
+        : [...prev, field]
+    );
+    setPage(1);
+  };
+
+  const clearFilters = () => {
+    setSelectedFields([]);
+    setSearchQuery('');
+    setPage(1);
   };
 
   return (
@@ -92,8 +145,67 @@ const Articles = () => {
         >
           <Filter className="h-5 w-5" />
           Filters
+          {selectedFields.length > 0 && (
+            <span className="bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {selectedFields.length}
+            </span>
+          )}
         </button>
       </form>
+
+      {/* Filters Panel */}
+      {showFilters && (
+        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Filter by Research Field</h3>
+            {selectedFields.length > 0 && (
+              <button
+                onClick={clearFilters}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+              >
+                <X className="h-4 w-4" />
+                Clear all
+              </button>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {AVAILABLE_FIELDS.map((field) => (
+              <button
+                key={field}
+                onClick={() => toggleField(field)}
+                className={`px-4 py-2 rounded-lg border-2 transition-all font-medium text-sm ${
+                  selectedFields.includes(field)
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
+                }`}
+              >
+                {FIELD_LABELS[field] || field}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Active Filters */}
+      {selectedFields.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedFields.map((field) => (
+            <span
+              key={field}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+            >
+              {FIELD_LABELS[field] || field}
+              <button
+                onClick={() => toggleField(field)}
+                className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Loading State */}
       {loading ? (
@@ -109,7 +221,9 @@ const Articles = () => {
                 <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
                 <p className="text-gray-600">
-                  Try adjusting your search or run the scraper to import articles
+                  {selectedFields.length > 0
+                    ? 'Try removing some filters or search for different terms'
+                    : 'Try adjusting your search or run the scraper to import articles'}
                 </p>
               </div>
             ) : (
@@ -138,12 +252,12 @@ const Articles = () => {
 
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {(article.research_fields || []).slice(0, 3).map((field, idx) => (
+                        {article.research_fields?.slice(0, 3).map((field, idx) => (
                           <span
                             key={idx}
                             className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
                           >
-                            {field}
+                            {FIELD_LABELS[field] || field}
                           </span>
                         ))}
                         {article.is_open_access && (
