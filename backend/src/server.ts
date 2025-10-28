@@ -3,6 +3,10 @@ import app from './app';
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
 import logger from './utils/logger';
+import cron from 'node-cron';
+import { runDailyScraping } from './jobs/dailyScraper';
+
+cron.schedule('0 2 * * *', runDailyScraping);
 
 dotenv.config();
 
