@@ -439,3 +439,33 @@ Avec ScholarFlow :
 - 30 minutes par jour
 
 = Gain de 2h30 par jour !
+
+
+
+Architecture  : 
+
+┌─────────────────────────────────────────┐
+│  Profil Utilisateur                     │
+│  research_fields: [                     │
+│    "Machine Learning",                  │
+│    "Computer Vision",                   │
+│    "Bioinformatics"                     │
+│  ]                                      │
+└─────────────────────────────────────────┘
+              │
+              ↓
+┌─────────────────────────────────────────┐
+│  Page Articles                          │
+│  - Affiche articles filtrés             │
+│  - Bouton "Manage topics"               │
+└─────────────────────────────────────────┘
+              │
+              ↓
+┌─────────────────────────────────────────┐
+│  Modal Topics                           │
+│  ☑ Machine Learning                     │
+│  ☐ Deep Learning                        │
+│  ☑ Computer Vision                      │
+│  ☐ Quantum Computing                    │
+│  ☐ Bioinformatics                       │
+└─────────────────────────────────────────┘
