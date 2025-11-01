@@ -11,7 +11,10 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "scrape": "ts-node src/scripts/runScraper.ts",
+    "scrape:now": "npm run scrape"
+
   },
   "keywords": [
     "scholarflow",
