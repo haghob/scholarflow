@@ -1,6 +1,6 @@
 import { arxivScraper } from '../services/arxivScraper';
 import { pubmedScraper } from '../services/pubmedScraper';
-import { crossrefScraper } from '../services/crossrefScraper';
+import { coreScraper } from '../services/coreScraper';
 import logger from '../utils/logger';
 
 export async function runDailyScraping() {
@@ -235,14 +235,14 @@ export async function runDailyScraping() {
       await new Promise(resolve => setTimeout(resolve, 5000));
 
       // PubMed
+      // PubMed
       await pubmedScraper.scrapeArticles(topic, 20);
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // CrossRef
-      await crossrefScraper.scrapeArticles(topic, 20);
+
+      // CORE
+      await coreScraper.scrapeArticles(topic, 50);
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
-    
     logger.info('Daily scraping completed');
   } catch (error) {
     logger.error('Daily scraping failed:', error);
