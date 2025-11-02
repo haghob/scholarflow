@@ -6,6 +6,8 @@ import rateLimit from 'express-rate-limit';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
+//import adminRoutes from './routes/adminRoutes';
+
 
 const app: Application = express();
 

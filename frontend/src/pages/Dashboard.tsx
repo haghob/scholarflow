@@ -1,4 +1,3 @@
-// frontend/src/pages/Dashboard.tsx
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -50,7 +49,6 @@ const Dashboard = () => {
       const token = localStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      // Récupère tous les articles (limité à 5 pour le dashboard)
       const articlesResponse = await axios.get(
         `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/articles`,
         {
@@ -62,7 +60,6 @@ const Dashboard = () => {
       const articles = articlesResponse.data.data?.articles || articlesResponse.data.articles || [];
       setRecentArticles(articles);
 
-      // Compte le total d'articles dans la base
       const totalResponse = await axios.get(
         `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/articles`,
         {
@@ -73,22 +70,19 @@ const Dashboard = () => {
       
       const total = totalResponse.data.data?.total || totalResponse.data.total || articles.length;
 
-      // Compte les articles de cette semaine
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       const weekArticles = articles.filter((a: Article) => 
         new Date(a.publishedDate) > oneWeekAgo
       );
 
-      // Update stats avec les vraies données
       setStats({
-        savedArticles: 0, // À connecter avec ton API de favoris
+        savedArticles: 0,
         newArticles: weekArticles.length,
-        collections: 0, // À connecter avec ton API de collections
+        collections: 0,
         readingList: total
       });
 
-      // Pour les recommandations, utilise les articles les plus cités pour l'instant
       const sortedByCitations = [...articles].sort((a, b) => 
         (b.citations || 0) - (a.citations || 0)
       );
