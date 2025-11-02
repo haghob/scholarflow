@@ -1,4 +1,3 @@
-// backend/src/services/crossrefScraper.ts
 import axios from 'axios';
 import { query } from '../config/database';
 import logger from '../utils/logger';

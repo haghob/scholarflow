@@ -1,4 +1,3 @@
-// backend/src/services/pubmedScraper.ts
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
 import { query } from '../config/database';
